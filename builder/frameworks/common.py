@@ -27,7 +27,7 @@ def execute(cmd):
     if proc.returncode == 0: COLOR = Fore.GREEN
     else: COLOR = Fore.RED
     for i in range( len(lines) ):
-        print COLOR + lines[i]
+        print (COLOR + lines[i])
         sleep(0.1)
     if proc.returncode != 0:
         sleep(0.1)
@@ -43,11 +43,11 @@ def dev_guid(env, save = True):
                 val = UUID(data['ComponentId'], version=4)
                 NEW = False
             except ValueError:
-                print Fore.RED + "ERROR GUID ", 
+                print (Fore.RED + "ERROR GUID ", )
         if True == NEW:
             GUID = str(uuid.uuid4()).upper()
             data['ComponentId'] = GUID
-            print Fore.BLUE + "GENERATED NEW GUID", GUID, Fore.BLACK 
+            print (Fore.BLUE + "GENERATED NEW GUID", GUID, Fore.BLACK )
         if True == save:
             f.seek(0)
             json.dump(data, f, indent=4) 
@@ -67,7 +67,7 @@ def dev_copy_json(env):
     PROJECT_DIR = env.subst("$PROJECT_DIR")    
     APP_MANIFEST = join(env.subst("$BUILD_DIR"), "approot", "app_manifest.json")
     copyfile(join(PROJECT_DIR, "src", "app_manifest.json"), APP_MANIFEST)
-    print Fore.BLUE + 'COMPONENT ID ', dev_guid(env, False), Fore.BLACK
+    print (Fore.BLUE + 'COMPONENT ID ', dev_guid(env, False), Fore.BLACK)
     with open(APP_MANIFEST, 'r+') as f:
         data = json.load(f)
         if env.baremetal == True:
@@ -119,7 +119,7 @@ def dev_uploader(target, source, env):
         cmd.append(env.GUID)
         WHO = env.GUID
     if (0 == execute(cmd)):
-        print Fore.CYAN + WHO + ' APP IS REMOVED'
+        print (Fore.CYAN + WHO + ' APP IS REMOVED')
     else: exit(1)
     cmd = []        
     cmd.append( join(env.tool_dir, "azsphere") ) 
@@ -130,7 +130,7 @@ def dev_uploader(target, source, env):
     cmd.append(join(env.subst("$BUILD_DIR"), "app.image"))
     rc = execute(cmd)
     if (0 == rc):
-        print Fore.CYAN + 'NEW APPLICATION IS READY'   
+        print (Fore.CYAN + 'NEW APPLICATION IS READY'   )
 
 def dev_compiler_poky(env):
     env.Replace(
@@ -159,6 +159,6 @@ def use_original_sdk(env):
     if 1 == use_sdk and hasattr(env, 'SDK') and os.path.isdir(env.SDK):
         env['ENV']['PATH'] = join(env.SDK, "Sysroots", env.sysroot, "tools", "gcc")
         env.tool_dir = join(env.SDK, "Tools")
-        print Fore.MAGENTA + "USED", env.SDK, Fore.BLACK    
+        print (Fore.MAGENTA + "USED", env.SDK, Fore.BLACK    )
         
         
